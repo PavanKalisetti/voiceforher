@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController textController = TextEditingController();
 
   //open a dialog box to add a compalint
-  void openComplaintBox(){
+  void openComplaintBox(String? docID){
     showDialog(context: context, builder: (context) => AlertDialog(
       // text user input
       content: TextField(
@@ -29,7 +29,12 @@ class _LoginPageState extends State<LoginPage> {
         ElevatedButton(
             onPressed: (){
               //adding note
-              firestoreService.addComplaint(textController.text);
+              if(docID == null){
+                firestoreService.addComplaint("name", "20-20-2024","satish harassed me", "i was so low", "physical harassment ", "location", false, false);
+              }
+              else{
+                firestoreService.updateComplaint(docID, "name", "20-20-2024","satish harassed me", "i was so low", "physical harassment ", "location", false, false);
+              }
               // clear text controller
               textController.clear();
 
@@ -51,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          openComplaintBox();
+          // openComplaintBox();
         },
         child: const Icon(Icons.add),
       ),
@@ -78,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                     title: Text(complaintText),
                     trailing: IconButton(
                       onPressed: (){
-
+                          openComplaintBox(docID);
                       },
                       icon: const Icon(Icons.edit),
                     ),

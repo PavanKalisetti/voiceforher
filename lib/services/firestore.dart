@@ -5,10 +5,17 @@ class FirestoreService{
   final CollectionReference complaints = FirebaseFirestore.instance.collection("complaints");
 
   // create: add a new complain
-  Future<void> addComplaint(String note){
+  Future<void> addComplaint(String name, String Date, String Subject, String Description, String Category, String location, bool isAno, bool status){
     return complaints.add({
-      'note': note,
+      'name': name,
+      'date': Date,
+      'subject': Subject,
+      'description': Description,
+      'category': Category,
+      'location': location,
+      'isano': isAno,
       'timestamp': Timestamp.now(),
+      'status': status,
     });
   }
 
@@ -20,10 +27,17 @@ class FirestoreService{
   }
 
   // update:
-  Future<void> updateComplaint(String docID, String newComplaint){
+  Future<void> updateComplaint(String docID, String name, String Date, String Subject, String Description, String Category, String location, bool isAno, bool status){
     return complaints.doc(docID).update({
-      'note': newComplaint,
+      'name': name,
+      'date': Date,
+      'subject': Subject,
+      'description': Description,
+      'category': Category,
+      'location': location,
+      'isano': isAno,
       'timestamp': Timestamp.now(),
+      'status': status,
     });
   }
 
