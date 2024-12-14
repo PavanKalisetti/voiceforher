@@ -1,150 +1,60 @@
-# VOICEFORHER
-## Overview
-This application is designed to address harassment issues faced by university students, particularly girl students. It serves as a digital platform to empower victims by providing a safe, user-friendly, and anonymous way to report harassment incidents, access resources for support, and connect with authorities or peer support groups.
-The app leverages **Flutter** for the frontend and **Firebase** for the backend, offering real-time updates, secure data handling, and seamless user interaction.
----
-## Key Features
-1. **Incident Reporting**:
-    - Users can report incidents by selecting harassment types (e.g., verbal abuse, sexual harassment, bullying).
-    - Reports capture essential details such as time, location, type, and individuals involved.
-    - Optional anonymous reporting to protect victims' identity.
+# SafeHervenApp - Addressing Harassment Faced by Girl Students
 
-2. **Resource Access**:
-    - Emotional and physical support resources.
-    - Contact details for grievance cells, university authorities, and peer support groups.
+## Project Overview
+SafeHervenApp is a mobile application designed to address harassment faced by girl students in universities. The app enables users to document and report harassment incidents, connect with peer support, and notify university authorities. It also offers an option to submit complaints anonymously for better privacy and security.
 
-3. **User-Friendly Interface**:
-    - Simple and intuitive design to ensure ease of use.
-    - Minimal input required to report incidents.
-
-4. **Real-Time Updates**:
-    - Notifications for status updates on reported incidents.
-    - Resource suggestions tailored to the incident type.
-
-5. **Data Privacy and Security**:
-    - Secure authentication via Firebase Authentication.
-    - Reports stored in Firestore with restricted access based on user roles (e.g., victim, admin, authority).
-
----
+This project is aimed at providing a safer and more supportive environment for students by utilizing technology to handle harassment incidents in a structured and organized manner.
 
 ## Tech Stack
-### Frontend:
-- **Flutter**
-    - Dart language
-    - Material Design for UI components
+- **Frontend**: Flutter
+- **State Management**: Provider
+- **Backend**: Firebase (Firestore, Authentication)
+- **Authentication**: Firebase Authentication
+- **Database**: Firebase Firestore
+- **Styling**: Google Fonts
+- **Notifications**: Firebase Cloud Messaging (FCM) [if applicable]
+- **Hosting/Deployment**: Firebase Hosting (for the web version) [if applicable]
 
-### Backend:
-- **Firebase**
-    - Firebase Authentication (Email/Password and Anonymous login)
-    - Firestore (Incident reports and user data storage)
-    - Firebase Cloud Functions (Automating notifications and escalations)
-    - Firebase Cloud Messaging (Real-time notifications)
-    - Firebase Hosting (Optional for web deployment)
+## Key Features
+- **Harassment Reporting**: Users can report harassment incidents by filling out a form with necessary details.
+- **Incident Tracking**: Track the status of the filed complaints.
+- **Support & Guidance**: Access resources for peer support and university authority contacts.
+- **Anonymous Reporting**: Anonymity is guaranteed for users who wish to file complaints discreetly.
+- **Real-Time Notifications**: Get real-time updates about the complaint status.
 
-### Additional Services:
-- Google Maps API (for location tracking)
-- Push Notifications (Firebase Cloud Messaging)
+## Setup & Installation Instructions
 
----
+### 1. Clone the repository
+First, clone the repository to your local machine using Git:
 
-## Installation
-### Prerequisites:
-1. Install Flutter SDK: [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
-2. Set up Firebase:
-    - Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/).
-    - Enable Firebase Authentication, Firestore, and Cloud Functions.
-    - Download and add the `google-services.json` file to your `android/app` directory.
+### bash
+``` git clone https://github.com/pavankalisetti/voiceforher.git ```
 
-### Steps:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repository-url/harassment-reporting-app.git
-   cd harassment-reporting-app
-   ```
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Run the app:
-   ```bash
-   flutter run
-   ```
+### 2. Install Flutter
+If you don't have Flutter installed, follow the official installation guide here: Flutter Installation
 
----
-
-## Firebase Setup
-1. **Authentication**:
-    - Enable Email/Password and Anonymous sign-in.
-2. **Firestore Database**:
-    - Create a Firestore database in "production mode".
-    - Use the following structure:
-      ```
-      collections: {
-        reports: {
-          reportId: {
-            type: "verbal abuse",
-            location: "Library",
-            time: "2024-12-13 10:00 AM",
-            details: "Optional description",
-            isAnonymous: true,
-            reportedBy: "userId",
-            status: "Pending",
-          }
-        },
-        users: {
-          userId: {
-            name: "John Doe",
-            email: "johndoe@example.com",
-            role: "student" | "admin",
-          }
-        }
-      }
-      ```
-3. **Cloud Functions**:
-    - Write functions to send notifications or escalate reports to authorities.
----
-## Usage
-1. **Login/Register**:
-    - Users can sign in using email/password or report incidents anonymously.
-2. **Report an Incident**:
-    - Navigate to the "Report Incident" section.
-    - Fill in the required fields (type, location, time) and submit.
-3. **Access Resources**:
-    - View support resources in the "Help & Support" section.
-4. **Manage Reports (Admin)**:
-    - Admin users can view, update, or resolve reports via the admin dashboard.
----
-## Key Screens
-1. **Login Screen**
-2. **Home Screen**
-3. **Report Incident Screen**
-4. **Help & Support Screen**
-5. **Admin Dashboard**
----
-## Security Rules (Firestore Example)
-```json
-
+### 3. Install Dependencies
+Navigate to the project directory and run the following command to install the required dependencies:
+``` flutter pub get
 ```
 
----
+This will install all the dependencies listed in the ```pubspec.yaml``` file.
 
-## Future Enhancements
-1. Voice-command activation for SOS.
-2. AI-based analysis of report trends.
-3. Integration with university grievance portals.
-4. Multi-language support.
+### 4. Set up Firebase
+   Create a Firebase project in the Firebase Console.
+   Add Firebase to your Flutter project by following the setup instructions in the Firebase documentation:
+   For iOS
+   For Android
+   Add the google-services.json (Android) and GoogleService-Info.plist (iOS) to your project as instructed in the setup guide.
+   Configure Firestore, Authentication, and other necessary Firebase services in the Firebase Console.
+   Ensure Firebase Cloud Messaging is set up if you plan to send notifications.
+### 5. Running the App
+   Run the app on your Android/iOS device or emulator:
 
----
+### bash
+```flutter run```
+### 7. Building APK (for Android)
+   To build the APK for Android, run:
+   ```flutter build apk```
+   You can then upload the APK file as required for the hackathon submission.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
----
-
-## Contributors
-- **Team Name**: Team Igniter
-- **Developers**: [List of Contributors]
-  1.Rupak Choppala
-  2.Pavan Kalisetti
-  3.Sai Satish Nilla
-  4.Arun Kmar Bidila

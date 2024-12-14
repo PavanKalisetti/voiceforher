@@ -334,6 +334,10 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
         String wasAnonymous = complaint['isano'].toString();
         String _hashedEmail = complaint['hashedEmail'];
 
+        if(wasAnonymous == 'true'){
+          name = 'Anonymous';
+        }
+
         // getHashedDetails();
         // print("isAuthorized $isAuthorized");
 

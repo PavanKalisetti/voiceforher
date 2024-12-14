@@ -44,7 +44,7 @@ class _EmergencyHelpScreenState extends State<EmergencyHelpScreen> {
   }
 
   Future<void> _callNumber() async {
-    const number = '9492319192'; // Replace with the actual emergency number
+    const number = '7989372523'; // Replace with the actual emergency number
     bool? result = await FlutterPhoneDirectCaller.callNumber(number);
     if (!result!) {
       debugPrint('Call could not be initiated.');
