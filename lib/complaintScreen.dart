@@ -16,6 +16,9 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String hashedEmail = " ";
   bool isAuthorized = false;
+  bool isAuthorized_fireStore = false;
+  String email_profile = " ";
+  bool _isLoading = true;
 
 
 
@@ -25,11 +28,10 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
     hashedEmail = prefs.getString('hashedEmail') ?? '';
     isAuthorized = prefs.getBool('authorized') ?? false;
   }
-  late bool isAuthorized_fireStore;
-  late String email_profile;
+
 
   Future<void> retriveData() async {
-    getHashedDetails();
+    await getHashedDetails();
     final prefs = await SharedPreferences.getInstance();
     email_profile = prefs.getString("email") ?? " ";
     print("isAuthorized value email profile $email_profile");
@@ -65,6 +67,7 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
       await retriveData();  // Make sure async call is awaited
       setState(() {
         // Update UI if needed after data retrieval
+        _isLoading = false;
       });
     });
   }
@@ -76,6 +79,18 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Girl Safety Complaints'),
+          backgroundColor: Colors.blue,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -367,70 +382,6 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
     );
   }
 
-  // Widget _buildComplaintListForUser(List<QueryDocumentSnapshot> complaints) {
-  //   return ListView.builder(
-  //     shrinkWrap: true,
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     itemCount: complaints.length,
-  //     itemBuilder: (context, index) {
-  //       final complaint = complaints[index];
-  //       String name = complaint['name'];
-  //       String complaintTitle = complaint['subject'];
-  //       String complaintDetails = complaint['description'];
-  //       String complaintDate = complaint['date'];
-  //       String complaintlocation = complaint['location'];
-  //       String wasAnonymous = complaint['isano'].toString();
-  //
-  //
-  //       String _hashedEmail = complaint['hashedEmail'];
-  //
-  //       // getHashedDetails();
-  //       // print("isAuthorized $isAuthorized");
-  //
-  //       // Skip rendering the card if the emails do not match
-  //       if (_hashedEmail != hashedEmail) {
-  //         return const SizedBox.shrink(); // Empty widget
-  //       }
-  //
-  //       return Card(
-  //         color: Colors.white, // White background for complaint cards
-  //         margin: const EdgeInsets.symmetric(vertical: 5),
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: ListTile(
-  //           title: Text(
-  //             complaintTitle,
-  //             style: const TextStyle(
-  //               fontWeight: FontWeight.bold,
-  //               color: Colors.blue,
-  //             ),
-  //           ),
-  //           subtitle: Text(
-  //             'Date: $complaintDate',
-  //             style: TextStyle(color: Colors.grey.shade700),
-  //           ),
-  //           leading: Icon(
-  //             Icons.report_problem,
-  //             color: Colors.blue,
-  //           ),
-  //           onTap: () =>
-  //               _showComplaintDetails(
-  //                 context,
-  //                 name,
-  //                 complaintTitle,
-  //                 complaintDetails,
-  //                 complaintDate,
-  //                 complaintlocation,
-  //                 wasAnonymous,
-  //
-  //
-  //               ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
 
   void _showComplaintDetails(

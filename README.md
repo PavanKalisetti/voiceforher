@@ -123,19 +123,7 @@ The app leverages **Flutter** for the frontend and **Firebase** for the backend,
 ---
 ## Security Rules (Firestore Example)
 ```json
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    match /reports/{reportId} {
-      allow create: if request.auth != null;
-      allow read, update: if request.auth != null && resource.data.reportedBy == request.auth.uid;
-      allow delete: if request.auth.token.admin == true;
-    }
-  }
-}
+
 ```
 
 ---
