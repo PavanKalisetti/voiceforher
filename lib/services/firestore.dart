@@ -5,9 +5,10 @@ class FirestoreService{
   final CollectionReference complaints = FirebaseFirestore.instance.collection("complaints");
 
   // create: add a new complain
-  Future<void> addComplaint(String name, String Date, String Subject, String Description, String Category, String location, bool isAno, bool status){
+  Future<void> addComplaint(String name, String hashedEmail,String Date, String Subject, String Description, String Category, String location, bool isAno, bool status){
     return complaints.add({
       'name': name,
+      'hashedEmail': hashedEmail,
       'date': Date,
       'subject': Subject,
       'description': Description,
@@ -27,9 +28,10 @@ class FirestoreService{
   }
 
   // update:
-  Future<void> updateComplaint(String docID, String name, String Date, String Subject, String Description, String Category, String location, bool isAno, bool status){
+  Future<void> updateComplaint(String docID, String name, String hashedEmail,String Date, String Subject, String Description, String Category, String location, bool isAno, bool status){
     return complaints.doc(docID).update({
       'name': name,
+      'hashedEmail': hashedEmail,
       'date': Date,
       'subject': Subject,
       'description': Description,

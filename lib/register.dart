@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voiceforher/login_page.dart';
+import 'package:voiceforher/services/FireStoreProfileServices.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -18,6 +23,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _roleController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+
+
+  final FirestoreProfileService firestoreProfileService = FirestoreProfileService();
 
   // Selected registration type
   String _registrationType = 'User';
@@ -41,6 +49,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
+
+        String hashEmail(String email) {
+          // Convert the email string to a list of bytes
+          var bytes = utf8.encode(email);
+
+          // Use SHA-256 to hash the email
+          var digest = sha256.convert(bytes);
+
+          // Return the hash as a hexadecimal string
+          return digest.toString();
+        }
+
+        final prefs = await SharedPreferences.getInstance();
+
+        String hashedEmail = hashEmail(_emailController.text);
+        await prefs.setString('hashedEmail', hashedEmail);
+        print('Registration type changed to: $_registrationType');
+        if(_registrationType == 'User'){
+
+          await prefs.setBool('authorized', false);
+          print("i am in the user block");
+
+          firestoreProfileService.addProfile(_nameController.text, _emailController.text, hashedEmail, _passwordController.text, _educationController.text, _mobileController.text, _roleController.text, _addressController.text,false);
+        }
+        else{
+          await prefs.setBool('authorized', true);
+          print("i am in the authority block");
+          firestoreProfileService.addProfile(_nameController.text, _emailController.text,hashedEmail, _passwordController.text, _educationController.text, _mobileController.text, _roleController.text, _addressController.text,true);
+        }
+
 
         // User successfully registered
         Navigator.of(context).pop(); // Close loading dialog
@@ -102,9 +140,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           _registrationType = 'User';
                         });
                       },
-                      child: Text('User'),
+                      child: Text('User',
+                        style: TextStyle(
+                        color: _registrationType == 'User' ? Colors.white70: Colors.black ,
+                      ),),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _registrationType == 'User' ? Colors.blue : Colors.grey,
+                        backgroundColor: _registrationType == 'User' ? Colors.blue : Colors.white70,
                       ),
                     ),
                     SizedBox(width: 16),
@@ -114,9 +155,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           _registrationType = 'Authority';
                         });
                       },
-                      child: Text('Authority'),
+                      child: Text('Authority',style: TextStyle(
+                        color: _registrationType == 'User' ? Colors.black :Colors.white70,
+                      ),),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _registrationType == 'Authority' ? Colors.blue : Colors.grey,
+                        backgroundColor: _registrationType == 'Authority' ? Colors.blue : Colors.white70,
                       ),
                     ),
                   ],
@@ -226,8 +269,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 SizedBox(height: 24),
                 Center(
                   child: ElevatedButton(
+
                     onPressed: _registerUser,
-                    child: Text('Register'),
+                    child: Text('Register', style: TextStyle(color: Colors.white),),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),

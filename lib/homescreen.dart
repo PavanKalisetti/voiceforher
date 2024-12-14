@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:voiceforher/ChatBotScreen.dart';
+import 'package:voiceforher/addtocontacts.dart';
+import 'package:voiceforher/requesting_help.dart';
 
+import 'awareness.dart';
+import 'counselling.dart';
 import 'profilebar.dart';
 import 'complaintScreen.dart';
 
@@ -11,35 +17,39 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   int _currentIndex = 0;
 
+  final String url =
+      "https://www.google.com/maps/@16.7871972,80.8486436,15.38z?entry=ttu&g_ep=EgoyMDI0MTIxMS4wIKXMDSoASAFQAw%3D%3D";
+
   final List<Widget> _pages = [
     HomePage(),
-
     MapScreen(),
+
+    ChatScreen(),
     ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent, // Adjusted for consistency
-        title: Row(
-          children: [
-            Icon(Icons.location_on, color: Colors.white),
-            SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Manipal Hospital Road...',
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Icon(Icons.notifications, color: Colors.white),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.deepPurpleAccent, // Adjusted for consistency
+      //   title: Row(
+      //     children: [
+      //       Icon(Icons.location_on, color: Colors.white),
+      //       SizedBox(width: 8),
+      //       Expanded(
+      //         child: Text(
+      //           'Manipal Hospital Road...',
+      //           overflow: TextOverflow.ellipsis,
+      //           style: TextStyle(fontWeight: FontWeight.bold),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      //   actions: [
+      //     Icon(Icons.notifications, color: Colors.white),
+      //   ],
+      // ),
       body: Center(
         child: Container(
           color: Colors.white,
@@ -63,6 +73,10 @@ class _HomescreenState extends State<Homescreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
           ),
@@ -80,65 +94,85 @@ class _HomescreenState extends State<Homescreen> {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        color: Colors.deepPurple.shade50,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  SizedBox(height: 100),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.warning_rounded,
-                      size: 80,
-                      color: Colors.white,
+    return Scaffold(
+      body: Center(
+        child: Container(
+          color: Colors.deepPurple.shade50,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_)=> EmergencyHelpScreen()),
+                        );
+                      },
+                      child: Icon(
+                        Icons.warning_rounded,
+                        size: 80,
+                        color: Colors.white,
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        backgroundColor: Colors.red,
+                        padding: EdgeInsets.all(30),
+                      ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      backgroundColor: Colors.red,
-                      padding: EdgeInsets.all(30),
+                    SizedBox(height: 16),
+                    Text(
+                      'Emergency Needed?',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Emergency Needed?',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Not Sure What to do?',
-                    style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
-                  ),
-                ],
+                    SizedBox(height: 16),
+                    Text(
+                      'Not Sure What to do?',
+                      style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildCircularButton(context, Icons.location_on, 'Safe Zone', SafeZonePage()),
-                        _buildCircularButton(context, Icons.group, 'She Mate', SheMatePage()),
-                        _buildCircularButton(context, Icons.map, 'Safe Pathways', SafePathwaysPage()),
-                      ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildCircularButton(context, Icons.location_on, 'Safe Zone', MapScreen()),
+                          _buildCircularButton(context, Icons.group, 'She Mate', MapScreen()),
+                          _buildCircularButton(context, Icons.map, 'Safe Pathways', MapScreen()),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  _buildRectangularButton(context, Icons.report, 'Complaint Box', ComplaintsScreen()),
-                  _buildRectangularButton(context, Icons.contacts, 'Add Contacts', AddContactsPage()),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildCircularButton(context, Icons.location_on,
+                              'Awareness', AwarenessPage()),
+                          _buildCircularButton(context, Icons.group,
+                              'Counselling', CounsellingHomePage()),
+
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 16),
+                    _buildRectangularButton(context, Icons.report, 'Complaint Box', ComplaintsScreen()),
+                    _buildRectangularButton(context, Icons.contacts, 'Emergency Contacts', EmergencyContactsPage()),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -208,17 +242,17 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class MapScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Map Screen',
-        style: TextStyle(fontSize: 24, color: Colors.deepPurpleAccent),
-      ),
-    );
-  }
-}
+// class MapScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Text(
+//         'Map Screen',
+//         style: TextStyle(fontSize: 24, color: Colors.deepPurpleAccent),
+//       ),
+//     );
+//   }
+// }
 
 // Placeholder pages for each grid item navigation
 class SafeZonePage extends StatelessWidget {
@@ -258,5 +292,33 @@ class AddContactsPage extends StatelessWidget {
       appBar: AppBar(title: Text('Add Contacts', style: TextStyle(color: Colors.white)), backgroundColor: Colors.deepPurpleAccent),
       body: Center(child: Text('Add Contacts Page', style: TextStyle(color: Colors.deepPurpleAccent))),
     );
+  }
+}
+
+
+// Placeholder screens
+class MapScreen extends StatelessWidget {
+  final String googleMapsUrl = "https://www.google.com/maps/@16.7871972,80.8486436,15.38z?entry=ttu&g_ep=EgoyMDI0MTIxMS4wIKXMDSoASAFQAw%3D%3D"; // San Francisco coordinates
+
+  @override
+  Widget build(BuildContext context) {
+    _redirectToGoogleMaps();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Redirecting to Google Maps..."),
+      ),
+      body: Center(
+        child: CircularProgressIndicator(), // Show a loading indicator while redirecting
+      ),
+    );
+  }
+
+  void _redirectToGoogleMaps() async {
+    if (await canLaunch(googleMapsUrl)) {
+      await launch(googleMapsUrl);
+    } else {
+      print("Could not launch Google Maps.");
+    }
   }
 }

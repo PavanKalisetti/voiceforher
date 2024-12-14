@@ -29,17 +29,17 @@ class _LoginPageState extends State<LoginPage> {
         ElevatedButton(
             onPressed: (){
               //adding note
-              if(docID == null){
-                firestoreService.addComplaint("name", "20-20-2024","satish harassed me", "i was so low", "physical harassment ", "location", false, false);
-              }
-              else{
-                firestoreService.updateComplaint(docID, "name", "20-20-2024","satish harassed me", "i was so low", "physical harassment ", "location", false, false);
-              }
-              // clear text controller
-              textController.clear();
-
-              // close the box
-              Navigator.pop(context);
+              // if(docID == null){
+              //    firestoreService.addComplaint("name", "20-20-2024","satish harassed me", "i was so low", "physical harassment ", "location", false, false);
+              // }
+              // else{
+              //    firestoreService.updateComplaint(docID, "name", "20-20-2024","satish harassed me", "i was so low", "physical harassment ", "location", false, false);
+              // }
+              // // clear text controller
+              // textController.clear();
+              //
+              // // close the box
+              // Navigator.pop(context);
             },
             child: Text("Add"),
         ),

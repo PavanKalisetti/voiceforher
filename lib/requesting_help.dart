@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData.light(),
-    home: EmergencyHelpScreen(),
-  ));
-}
+// void main() {
+//   runApp(MaterialApp(
+//     debugShowCheckedModeBanner: false,
+//     theme: ThemeData.light(),
+//     home: EmergencyHelpScreen(),
+//   ));
+// }
 
 class EmergencyHelpScreen extends StatefulWidget {
   const EmergencyHelpScreen({super.key});
@@ -33,6 +34,7 @@ class _EmergencyHelpScreenState extends State<EmergencyHelpScreen> {
           timerExpired = true;
         });
         timer.cancel();
+        _callNumber(); // Make the call when timer expires
       } else {
         setState(() {
           countdown--;
@@ -40,6 +42,15 @@ class _EmergencyHelpScreenState extends State<EmergencyHelpScreen> {
       }
     });
   }
+
+  Future<void> _callNumber() async {
+    const number = '9492319192'; // Replace with the actual emergency number
+    bool? result = await FlutterPhoneDirectCaller.callNumber(number);
+    if (!result!) {
+      debugPrint('Call could not be initiated.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,4 +148,3 @@ class _EmergencyHelpScreenState extends State<EmergencyHelpScreen> {
     );
   }
 }
-

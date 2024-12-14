@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voiceforher/services/firestore.dart';
 
 class Raisecomplaint extends StatefulWidget {
@@ -18,9 +19,19 @@ class _RaisecomplaintState extends State<Raisecomplaint> {
   final TextEditingController _issueOccurredAtController = TextEditingController();
   bool _wantAnonymous = false;
   final FirestoreService firestoreService = FirestoreService();
+  late final hashedEmail;
 
-  void submitFields(){
-    firestoreService.addComplaint(_nameController.text, _issueOccurredOnController.text,_subjectController.text, _descriptionController.text, _categoryController.text, _issueOccurredAtController.text, _wantAnonymous, false);
+  Future<void> submitFields() async {
+    final prefs = await SharedPreferences.getInstance();
+    hashedEmail = prefs.getString('hashedEmail') ?? " ";
+    // firestoreService.addComplaint(_nameController.text,hashedEmail!, _issueOccurredOnController.text,_subjectController.text, _descriptionController.text, _categoryController.text, _issueOccurredAtController.text, _wantAnonymous, false);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    submitFields();
   }
 
   @override
@@ -147,7 +158,8 @@ class _RaisecomplaintState extends State<Raisecomplaint> {
                           // Handle form submission
 
                           try{
-                            submitFields();
+                            // submitFields();
+                            firestoreService.addComplaint(_nameController.text,hashedEmail, _issueOccurredOnController.text,_subjectController.text, _descriptionController.text, _categoryController.text, _issueOccurredAtController.text, _wantAnonymous, false);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Complaint Registered Successfully')),
 

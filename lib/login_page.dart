@@ -1,9 +1,18 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voiceforher/register.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'homescreen.dart';
+
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final CollectionReference profiles = _firestore.collection('profiles');
+
+
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,7 +27,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
   void _login() async {
+    final CollectionReference profiles = _firestore.collection('profiles');
     final String email = _emailController.text.trim();
     final String password = _passwordController.text;
 
@@ -32,12 +45,46 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      // Sign in with Firebase
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       _showSnackbar("Login successful!");
+
+      // Fetch all profiles from Firestore
+      final snapshot = await profiles.get();  // Fetch profiles collection
+
+      // Loop through the profiles and check if the email matches
+      bool isAno = false;
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        if (data['email'] == email) {  // Match the email
+          print("the email is  ${data['email']}");
+
+          isAno = data['isAuthority'] ?? false;  // Store isAno value
+          print("the email is  ${data['isAuthority']} and the $isAno");
+          break;  // Stop once we find the match
+        }
+      }
+
+      // Save the 'isAno' value to SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIN', true);
+      await prefs.setBool('authorized', isAno);  // Save the 'isAno' value
+      await prefs.setString("email", email);
+      String hashEmail(String email) {
+        // Convert the email string to a list of bytes
+        var bytes = utf8.encode(email);
+
+        // Use SHA-256 to hash the email
+        var digest = sha256.convert(bytes);
+
+        // Return the hash as a hexadecimal string
+        return digest.toString();
+      }
+      String HashedEmail = hashEmail(email);
+      await prefs.setString("hashedEmail", HashedEmail);
+
       // Navigate to the next screen
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Homescreen()));
     } on FirebaseAuthException catch (e) {
       _showSnackbar(_handleFirebaseAuthError(e.code));
     } catch (e) {
@@ -48,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
   }
+
 
   String _handleFirebaseAuthError(String errorCode) {
     switch (errorCode) {
